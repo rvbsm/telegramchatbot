@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher
-from filters import IsOwnerFilter, IsAdminFilter, IsBotFilter
+from filters import isOwnerFilter, isAdminFilter, isBotFilter
 
 from config import botToken
 

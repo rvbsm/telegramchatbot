@@ -12,9 +12,10 @@ logging.basicConfig(level=logging.INFO)
 
 #
 #	(?) Настройки только в личных чатах:
-#		Преобразование голосовых	Да/Нет
+#		Преобразование голосовых:		Да/Нет
+#		Языки:							Русский/English/Українська
 #	Баны, варны и репорты
-#	Количество сообщений
+#	Распределить админ команды, ответы и общие
 #	Пасхалки
 #	Языки
 #
@@ -22,6 +23,7 @@ logging.basicConfig(level=logging.INFO)
 async def onStartUp(dp):
 	await bot.delete_webhook(drop_pending_updates=True)
 	await bot.set_webhook(cfg.webhookUrl, drop_pending_updates=True)
+
 
 executor.start_polling(dispatcher=dp, skip_updates=True, on_startup=onStartUp)
 # executor.start_webhook(dispatcher=dp, skip_updates=False, on_startup=onStartUp, webhook_path=cfg.webhookPath, host="0.0.0.0", port=os.getenv("PORT"))

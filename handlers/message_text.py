@@ -12,8 +12,8 @@ async def textMessage(message: types.Message):
 			pg.addUser(message.from_user.id, message.chat.id, message.from_user.first_name)
 
 	if message.from_user.username:
-		pg.updateUserName(message.from_user.id, message.chat.id, message.from_user.username)
+		pg.setUserName(message.from_user.id, message.chat.id, message.from_user.username)
 	else:
-		pg.updateUserName(message.from_user.id, message.chat.id, message.from_user.first_name)
+		pg.setUserName(message.from_user.id, message.chat.id, message.from_user.first_name)
 
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
