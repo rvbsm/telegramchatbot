@@ -25,5 +25,4 @@ async def onStartUp(dp):
 	await bot.set_webhook(cfg.webhookUrl, drop_pending_updates=True)
 
 
-executor.start_polling(dispatcher=dp, skip_updates=True, on_startup=onStartUp)
-# executor.start_webhook(dispatcher=dp, skip_updates=False, on_startup=onStartUp, webhook_path=cfg.webhookPath, host="0.0.0.0", port=os.getenv("PORT"))
+executor.start_webhook(dispatcher=dp, skip_updates=False, on_startup=onStartUp, webhook_path=cfg.webhookPath, host="0.0.0.0", port=os.getenv("PORT"))
