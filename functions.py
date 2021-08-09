@@ -2,8 +2,6 @@ from aiogram import types
 import xml.etree.ElementTree as XmlElementTree
 import httplib2, uuid, subprocess, tempfile, os
 
-from config import yandexToken
-
 def getCommandAll(message: types.Message):
 	if message.text[0] in ('/', '!'):
 		return message.text.split()
