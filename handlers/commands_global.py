@@ -4,20 +4,20 @@ from database import pg
 import config as cfg
 import functions as fnc
 
-from .lang import Ru, En
+import lang
 
 @dp.message_handler(commands=["help"])
 async def helpMessage(message: types.Message):
-	lang = pg.getChatLang(message.chat.id)
+	chatLang = pg.getChatLang(message.chat.id)
 
 	if pg.getCommandsList(message.chat.id):
-		await message.reply(text=lang.helpCommandsText + '\n!'.join(pg.getCommandsList(message.chat.id)))
+		await message.reply(text=getattr(lang, chatLang).helpCommandsText + '\n!'.join(pg.getCommandsList(message.chat.id)))
 	else:
-		await message.reply(text=lang.helpNoCommandsText)
+		await message.reply(text=getattr(lang, chatLang).helpNoCommandsText)
 
 @dp.message_handler(commands=["addcom"], is_admin=True)
 async def userCommandAdd(message: types.Message):
-	lang = pg.getChatLang(message.chat.id)
+	chatLang = pg.getChatLang(message.chat.id)
 
 	command = fnc.getCommandArgs(message)[0]
 	commandOutput = ' '.join(fnc.getCommandArgs(message)[1:])
@@ -27,21 +27,21 @@ async def userCommandAdd(message: types.Message):
 	else:
 		pg.editCommand(message.chat.id, command, commandOutput)
 
-	await message.reply(text=lang.commandNewText + command)
+	await message.reply(text=getattr(lang, chatLang).commandNewText + command)
 
 @dp.message_handler(commands=["delcom"], is_admin=True)
 async def userCommandRemove(message: types.Message):
-	lang = pg.getChatLang(message.chat.id)
+	chatLang = pg.getChatLang(message.chat.id)
 
 	command = fnc.getCommandArgs(message)[0]
 	if command in pg.getCommandsList(message.chat.id):
 		pg.removeCommand(message.chat.id, command)
 
-		await message.reply(text=lang.commandRemoveText + command)
+		await message.reply(text=getattr(lang, chatLang).commandRemoveText + command)
 
 @dp.message_handler(commands=["admin", "user"], is_admin=True, is_reply=True)
 async def userPromote(message: types.Message):
-	lang = pg.getChatLang(message.chat.id)
+	chatLang = pg.getChatLang(message.chat.id)
 
 	if not pg.existUser(message.reply_to_message.from_user.id, message.chat.id):
 		if message.reply_to_message.from_user.username:
@@ -54,35 +54,41 @@ async def userPromote(message: types.Message):
 			return
 
 		pg.setUserStatus(message.reply_to_message.from_user.id, message.chat.id, True)
-		await message.reply_to_message.reply(text=lang.promoteToAdminText)
+		await message.reply_to_message.reply(text=getattr(lang, chatLang).promoteToAdminText)
 	elif fnc.getCommand(message) == "user":
 		if not pg.getUserStatus(message.reply_to_message.from_user.id, message.chat.id):
 			return
 
 		pg.setUserStatus(message.reply_to_message.from_user.id, message.chat.id, False)
-		await message.reply_to_message.reply(text=lang.promoteToUserText)
+		await message.reply_to_message.reply(text=getattr(lang, chatLang).promoteToUserText)
+
+@dp.message_handler(commands=["locale", "language"], is_admin=True)
+async def chatLanguage(message: types.Message):
+	return
 
 @dp.message_handler(commands=["warn"], is_admin=True, is_reply=True)
-async def userWarn(message: types.Message):
+async def adminWarn(message: types.Message):
 	pg.addUserWarn(message.reply_to_message.from_user.id, message.chat.id)
 
 @dp.message_handler(commands=["ban"], is_admin=True, is_reply=True)
-async def userBan(message: types.Message):
+async def adminBan(message: types.Message):
 	return
 
 @dp.message_handler(commands=["forgive"], is_admin=True, is_reply=True)
-async def userForgive(message: types.Message):
+async def adminForgive(message: types.Message):
 	pg.removeUserWarn(message.reply_to_message.from_user.id, message.chat.id)
+
+@dp.message_handler(commands=["report"], is_reply=True)
+async def userReport(message: types.Message):
+	return
 
 @dp.message_handler(commands=["stat"])#, is_reply)
 async def userStats(message: types.Message):
-	statsText = f"""Информация об участнике {0}
-	ID: {0}
-	Всего сообщений: {0}
-	Варны: {pg.getUserWarn(message.from_user.id, message.chat.id)}/{0}
-	Банов: {0}
-
-	"""
-	await message.reply(text=statsText)
-
-print(lang.ru.startMessageText)
+	chatLang = pg.getChatLang(message.chat.id)
+	pg.getUserWarn(message.from_user.id, message.chat.id)
+	await message.reply(text=getattr(lang, chatLang).aboutUserText.format(
+		message.from_user.first_name,
+		message.from_user.id,
+		pg.getUserCounter(message.from_user.id, message.chat.id),
+		pg.getUserWarn(message.from_user.id, message.chat.id),
+		pg.getChatMaxWarns(message.chat.id)))

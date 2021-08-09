@@ -6,6 +6,11 @@ class ru_RU:
 	commandRemoveText = "Удалена команда !"
 	promoteToAdminText = "Повышен до Админа"
 	promoteToUserText = "Понижен до Пользователя"
+	aboutUserText = """Информация об участнике {0}
+	ID: {1}
+	Всего сообщений: {2}
+	Варны: {3}/{4}
+	"""
 
 class en_US:
 	firstMessageText = "Hi chat!"
