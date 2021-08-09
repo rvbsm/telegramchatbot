@@ -64,7 +64,16 @@ async def userPromote(message: types.Message):
 
 @dp.message_handler(commands=["locale", "language"], is_admin=True)
 async def chatLanguage(message: types.Message):
-	return
+	chatLang = pg.getChatLang(message.chat.id)
+
+	languageMarkup = types.InlineKeyboardMarkup(row_width=3)
+	languageMarkup.add(
+		types.InlineKeyboardButton(text="Русский", callback_data="lang-ru_RU"),
+		types.InlineKeyboardButton(text="English", callback_data="lang-en_US"),
+		types.InlineKeyboardButton(text="Укранська", callback_data="lang-uk_UA"))
+
+	await message.reply(text="Выбор языка\nLanguage choice\nВыбір мови", reply_markup=languageMarkup)
+
 
 @dp.message_handler(commands=["warn"], is_admin=True, is_reply=True)
 async def adminWarn(message: types.Message):
