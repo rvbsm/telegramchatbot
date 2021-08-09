@@ -7,28 +7,31 @@ class DataBase:
 		self.curs = self.conn.cursor()
 		self.conn.autocommit = True
 
-	def createTables(self, user_id: int, chat_id: int):
+	def createTables(self, user_id: int, chat_id: int, chat_title: str, counter: int):
 		self.curs.execute('''CREATE TABLE IF NOT EXISTS "%s_users" (
 			"id" serial PRIMARY KEY NOT NULL,
 			"name" text,
-			"admin" bool DEFAULT 'false',
-			"warn" smallint DEFAULT '0',
-			"msg_counter" integer DEFAULT '0'
+			"admin" bool DEFAULT false,
+			"warn" smallint DEFAULT 0,
+			"msg_counter" integer DEFAULT 0
 		)''', (chat_id,))
-		self.curs.execute('''INSERT INTO "%s_users"("id", "admin") VALUES (%s, %s) ON CONFLICT ("id") DO UPDATE SET "admin" = true''', (chat_id, user_id, True))
+		self.curs.execute('''INSERT INTO "%s_users"("id", "admin") VALUES(%s, %s) ON CONFLICT ("id") DO UPDATE SET "admin" = true''', (chat_id, user_id, True))
 
-		self.curs.execute('''CREATE TABLE IF NOT EXISTS "%s_commands" (
-			"command" text PRIMARY KEY,
+		self.curs.execute('''CREATE TABLE IF NOT EXISTS "commands" (
+			"id" bigint PRIMARY KEY NOT NULL,
+			"command" text,
 			"output" text
-		)''', (chat_id,))
+		)''')
 
-		self.curs.execute('''CREATE TABLE "%s_settings" (
-			"name" text,
-			"members" serial,
-			"max_warns" serial DEFAULT '3',
-			"msg_counter" integer DEFAULT '0',
-			"lang" text
-		)''', (chat_id,))
+		self.curs.execute('''CREATE TABLE IF NOT EXISTS "chats_settings" (
+			"id" bigint PRIMARY KEY NOT NULL,
+			"title" text NOT NULL,
+			"members" integer,
+			"max_warns" smallint DEFAULT 3,
+			"msg_counter" integer DEFAULT 0,
+			"lang" text DEFAULT 'ru_RU'
+		)''')
+		self.curs.execute('''INSERT INTO "chats_settings"("id", "title", "msg_counter") VALUES(%s, %s, %s) ON CONFLICT ("id") DO NOTHING''', (chat_id, chat_title, counter))
 
 
 	def getUsers(self, chat_id: int):
@@ -43,9 +46,9 @@ class DataBase:
 		return bool(len(result))
 
 	def addUser(self, user_id: int, chat_id: int, username: str):
-		self.curs.execute('''INSERT INTO "%s_users" ("id", "name") VALUES (%s, %s) ON CONFLICT ("id") DO NOTHING''', (chat_id, user_id, username))
+		self.curs.execute('''INSERT INTO "%s_users"("id", "name") VALUES(%s, %s) ON CONFLICT ("id") DO NOTHING''', (chat_id, user_id, username))
 
-	def updateUserName(self, user_id: int, chat_id: int, username: str):
+	def setUserName(self, user_id: int, chat_id: int, username: str):
 		self.curs.execute('''UPDATE "%s_users" SET "name" = %s WHERE "id" = %s''', (chat_id, username, user_id))
 
 
@@ -81,11 +84,11 @@ class DataBase:
 		self.curs.execute('''UPDATE "%s_users" SET "warn" = %s WHERE "id" = %s''', (chat_id, warn, user_id))
 
 	def removeUserWarn(self, user_id: int, chat_id: int):
-		self.curs.execute('''UPDATE "%s_users" SET "warn" = '0' WHERE "id" = %s''', (chat_id, user_id))
+		self.curs.execute('''UPDATE "%s_users" SET "warn" = 0 WHERE "id" = %s''', (chat_id, user_id))
 
 
 	def getCommandsList(self, chat_id: int):
-		self.curs.execute('''SELECT "command" FROM "%s_commands"''', (chat_id,))
+		self.curs.execute('''SELECT "command" FROM "commands" WHERE "id" = %s''', (chat_id,))
 		rows = self.curs.fetchall()
 		
 		if rows == []:
@@ -95,19 +98,36 @@ class DataBase:
 				return[r[0] for r in rows]
 
 	def getCommandOutput(self, chat_id: int, command: str):
-		self.curs.execute('''SELECT "output" FROM "%s_commands" WHERE "command" = %s''', (chat_id, command))
+		self.curs.execute('''SELECT "output" FROM "commands" WHERE "command" = %s AND "id" = %s''', (command, chat_id))
 		result = self.curs.fetchall()
 		for r in result:
 			return r[0]
 
 	def addCommand(self, chat_id: int, command: str, output: str):
-		self.curs.execute('''INSERT INTO "%s_commands" ("command", "output") VALUES (%s, %s)''', (chat_id, command, output))
+		self.curs.execute('''INSERT INTO "commands"("id", "command", "output") VALUES(%s, %s, %s)''', (chat_id, command, output))
 
 	def editCommand(self, chat_id: int, command: str, output: str):
-		self.curs.execute('''UPDATE "%s_commands" SET "output" = %s WHERE "command" = %s''', (chat_id, output, command))
+		self.curs.execute('''UPDATE "commands" SET "output" = %s WHERE "id" = %s AND "command" = %s''', (output, chat_id, command))
 
 	def removeCommand(self, chat_id: int, command: str):
-		self.curs.execute('''DELETE FROM "%s_commands" WHERE "command" = %s''', (chat_id, command))
+		self.curs.execute('''DELETE FROM "commands" WHERE "id" = %s AND "command" = %s''', (chat_id, command))
+
+
+	def getChatLang(self, chat_id: int):
+		self.curs.execute('''SELECT "lang" FROM "chats_settings" WHERE "id" = %s''', (chat_id,))
+		result = self.curs.fetchall()
+		for r in result:
+			return r[0]
+
+	def setChatLang(self, chat_id: int, lang: str):
+		self.curs.execute('''UPDATE "chats_settings" SET "lang" = %s WHERE "id" = %s''', (lang, chat_id))
+
+
+	def getChatMaxWarns(self, chat_id: int):
+		self.curs.execute('''SELECT "max_warns" FROM "chats_settings" WHERE "id" = %s''', (chat_id,))
+		result = self.curs.fetchall()
+		for r in result:
+			return r[0]
 
 
 	def close(self):
