@@ -1,5 +1,7 @@
 from . import message_private
 from . import message_new_members_chat
+from . import commands_reply
+from . import commands_admin
 from . import commands_global
 from . import commands_user
 from . import message_text
