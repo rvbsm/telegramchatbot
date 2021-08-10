@@ -1,4 +1,4 @@
 # telegramchatbot
-An Telegram Bot for ... (finish writing)
+An Telegram Bot for your chat.
 
-NOT WORKING NOW
+in very-very alpha tests and developing
