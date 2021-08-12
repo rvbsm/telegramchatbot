@@ -1,6 +1,4 @@
 from aiogram import types
-import xml.etree.ElementTree as XmlElementTree
-import httplib2, uuid, subprocess, tempfile, os
 
 def getCommandAll(message: types.Message):
 	if message.text[0] in ('/', '!'):

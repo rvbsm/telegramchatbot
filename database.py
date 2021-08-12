@@ -130,6 +130,17 @@ class DataBase:
 			return r[0]
 
 
+	def getChatAdmins(self, chat_id: int):
+		self.curs.execute('''SELECT "id" FROM "%s_users" WHERE "admin" = true''', (chat_id,))
+		rows = self.curs.fetchall()
+
+		if rows == []:
+			return rows
+		else:
+			for r in rows:
+				return[r[0] for r in rows]
+
+
 	def close(self):
 		self.conn.commit()
 		self.conn.close()

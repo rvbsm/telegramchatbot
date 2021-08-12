@@ -10,8 +10,9 @@ class ru_RU:
 	aboutUserText = """Информация об участнике {0}\nID: {1}\nВсего сообщений: {2}\nПредупреждения: {3}/{4}"""
 	langChange = "Язык успешно изменён на Русский"
 
-	warnAddText = "Тшш, поаккуратней с сообщениями"
+	warnAddText = "Тшш, поаккуратней с сообщениями\nУчастник имеет {0}/{1} предупреждений"
 	warnRemText = "Сняты все предупреждения"
+	banText = "Ой, отлетел челик"
 	
 	settingsTitle = "Настройки"
 	settingsWarnText = "Количество предупреждений: "
@@ -31,8 +32,9 @@ class en_US:
 	aboutUserText = """Info about {0}\nID: {1}\nMessages: {2}\nWarns: {3}/{4}"""
 	langChange = "Language successfully changed to English"
 
-	warnAddText = "Follow your messages"
+	warnAddText = "You get a warning\nMember have {0}/{1} warnings"
 	warnRemText = "Cleared all warnings"
+	banText = "You have been banned from this chat"
 	
 	settingsTitle = "Settings"
 	settingsWarnText = "Number of warns: "
@@ -51,8 +53,9 @@ class uk_UA:
 	aboutUserText = """Информація про учасника {0}\nID: {1}\nВсього повідомлень: {2}\nПопередження: {3}/{4}"""
 	langChange = "Мова успішно змінено на Українську"
 
-	warnAddText = "Обережніше з повідомленнями"
+	warnAddText = "Слідкуй за словами!\nВчасник має {0}/{1} попереджень"
 	warnRemText = "Знято усі попередження"
+	banText = "Бувай, козаче"
 	
 	settingsTitle = "Налаштування"
 	settingsWarnText = "кількість попереджень: "
