@@ -1,8 +1,8 @@
 from aiogram import types
-from dispatcher import dp
+from dispatcher import dp, bot
 from database import pg
 import config as cfg
-import functions as fnc
+import functions.command as cmd
 
 import lang
 
@@ -11,8 +11,8 @@ import lang
 async def userCommandAdd(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
 
-	command = fnc.getCommandArgs(message)[0]
-	commandOutput = ' '.join(fnc.getCommandArgs(message)[1:])
+	command = cmd.getCommandArgs(message)[0]
+	commandOutput = ' '.join(cmd.getCommandArgs(message)[1:])
 
 	if not command in pg.getCommandsList(message.chat.id):
 		pg.addCommand(message.chat.id, command, commandOutput)
@@ -27,13 +27,14 @@ async def userCommandRemove(message: types.Message):
 
 	chatLang = pg.getChatLang(message.chat.id)
 
-	command = fnc.getCommandArgs(message)[0]
+	command = cmd.getCommandArgs(message)[0]
 	if command in pg.getCommandsList(message.chat.id):
 		pg.removeCommand(message.chat.id, command)
 
 		await message.reply(text=getattr(lang, chatLang).commandRemText + command)
 
-@dp.message_handler(commands=["admin", "user"], is_admin=True, is_reply=True)
+# ~
+@dp.message_handler(commands=["admin", "user"], is_admin=True, is_reply=True, bot_promote=True)
 async def userPromote(message: types.Message):
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 
@@ -45,13 +46,13 @@ async def userPromote(message: types.Message):
 		else:
 			pg.addUser(message.reply_to_message.from_user.id, message.chat.id, message.reply_to_message.from_user.first_name)
 
-	if fnc.getCommand(message) == "admin":
+	if cmd.getCommand(message) == "admin":
 		if pg.getUserStatus(message.reply_to_message.from_user.id, message.chat.id):
 			return
 
 		pg.setUserStatus(message.reply_to_message.from_user.id, message.chat.id, True)
 		await message.reply_to_message.reply(text=getattr(lang, chatLang).promoteToAdminText)
-	elif fnc.getCommand(message) == "user":
+	elif cmd.getCommand(message) == "user":
 		if not pg.getUserStatus(message.reply_to_message.from_user.id, message.chat.id):
 			return
 
@@ -71,7 +72,7 @@ async def chatLanguage(message: types.Message):
 		types.InlineKeyboardButton(text="Укранська", callback_data="language-uk_UA")
 	)
 
-	await message.reply(text="Выбор языка / Language choice / Выбір мови", reply_markup=languageMarkup)
+	await message.reply(text="Выбор языка\t/\tLanguage choice\t/\tВыбір мови", reply_markup=languageMarkup)
 
 @dp.message_handler(commands=["warn"], is_admin=True, is_reply=True)
 async def adminWarn(message: types.Message):
@@ -82,6 +83,7 @@ async def adminWarn(message: types.Message):
 	await message.reply_to_message.reply(getattr(lang, chatLang).warnAddText)
 
 @dp.message_handler(commands=["ban"], is_admin=True, is_reply=True)
+# ~
 async def adminBan(message: types.Message):
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 
@@ -95,6 +97,7 @@ async def adminForgive(message: types.Message):
 	pg.removeUserWarn(message.reply_to_message.from_user.id, message.chat.id)
 	await message.reply_to_message.reply(text=attr(lang, chatLang).warnRemText)
 
+# ~
 @dp.message_handler(commands=["settings"], is_admin=True)
 async def settingsMessage(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
@@ -103,6 +106,7 @@ async def settingsMessage(message: types.Message):
 	settingsMarkup.add(
 		types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsLangText, callback_data="settings-language"),
 		types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsWarnText + pg.getChatMaxWarns(message.chat.id), callback_data="settings-max_warns")
+		#types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsDefault Text, callback_data="settings-")
 	)
 
 	await message.reply(text=getattr(lang, chatLang).settingsTitle, reply_markup=settingsMarkup)

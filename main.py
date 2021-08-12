@@ -1,5 +1,6 @@
 from aiogram import types, executor
 from dispatcher import bot, dp
+import filters
 import handlers
 
 import logging, requests, os
@@ -13,9 +14,14 @@ logging.basicConfig(level=logging.INFO)
 #
 #	Настройки чата:
 #		Рандомный шип:				Да/Нет
+#		Дефолт настройки для чата
 #	Баны и репорты
+#	Перевести текст в переменные
+#	Локализация
 #	Рандомный шип
 #	Пасхалки
+#	Markdown
+#	Clean up the code
 #
 
 async def onStartUp(dp):

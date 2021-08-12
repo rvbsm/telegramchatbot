@@ -2,10 +2,10 @@ from aiogram import types
 from dispatcher import dp
 from database import pg
 import config as cfg
-import functions as fnc
 
 import lang
 
+# ~
 @dp.message_handler(commands=["help"])
 async def helpMessage(message: types.Message):
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
@@ -17,7 +17,8 @@ async def helpMessage(message: types.Message):
 	else:
 		await message.reply(text=getattr(lang, chatLang).helpNoCommandsText)
 
-@dp.message_handler(commands=["stat"])#, is_reply)
+# ~
+@dp.message_handler(commands=["stat", "info"])#, is_reply)
 async def userStats(message: types.Message):
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 

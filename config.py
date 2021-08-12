@@ -2,7 +2,7 @@ import os
 
 botToken = os.getenv("botToken")
 botName = os.getenv("botName")
-
+# Since the bot is deployed to Heroku in variables only the url of the database, but it's still shitcode, yep
 databaseUrl = os.getenv("DATABASE_URL")
 databasePath = f"""
 user={databaseUrl.split('/')[2].split('@')[0].split(':')[0]} 

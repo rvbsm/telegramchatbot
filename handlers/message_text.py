@@ -3,6 +3,7 @@ from dispatcher import dp
 from database import pg
 import config as cfg
 
+# ~
 @dp.message_handler()
 async def textMessage(message: types.Message):
 	if not pg.existUser(message.from_user.id, message.chat.id):

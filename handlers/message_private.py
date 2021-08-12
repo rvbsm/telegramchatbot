@@ -3,6 +3,7 @@ from dispatcher import dp
 from database import pg
 import config as cfg
 
+# ~
 @dp.message_handler(lambda message: message.from_user.id == message.chat.id, content_types=["any"])
 async def privateMessage(message: types.Message):
 	privateMarkup = types.InlineKeyboardMarkup(row_width=2)
