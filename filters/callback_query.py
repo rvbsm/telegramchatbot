@@ -5,6 +5,12 @@ from config import botToken
 from database import pg
 
 class isAdminCallFilter(BoundFilter):
+	"""
+	Same as in 'message' filter but for callback_querry
+	Check if the user is admin of chat
+	return: Returns True if user is admin of chat
+	rtype: `bool`
+	"""
 	key = "is_admin_call"
 
 	def __init__(self, is_admin_call):

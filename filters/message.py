@@ -5,6 +5,11 @@ from config import botToken
 from database import pg
 
 class isAdminFilter(BoundFilter):
+	"""
+	Check if the user is admin of chat
+	return: Returns True if user is admin of chat
+	rtype: `bool`
+	"""
 	key = "is_admin"
 
 	def __init__(self, is_admin):
@@ -14,6 +19,11 @@ class isAdminFilter(BoundFilter):
 		return message.from_user.id in pg.getChatAdmins(message.chat.id)
 
 class isBotFilter(BoundFilter):
+	"""
+	Check if the user is current bot
+	return: Returns True if bot
+	rtype: `bool`
+	"""
 	key = "is_bot"
 
 	def __init__(self, is_bot):
@@ -23,6 +33,11 @@ class isBotFilter(BoundFilter):
 		return message.new_chat_members[0].id == int(botToken.split(':')[0])
 
 class isBotAdminFilter(BoundFilter):
+	"""
+	Check if the bot is admin of chat
+	return: Returns True if bot is admin of chat
+	rtype: `bool`
+	"""
 	key = "is_bot_admin"
 
 	def __init__(self, is_bot_admin):

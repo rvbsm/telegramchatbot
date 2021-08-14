@@ -2,9 +2,13 @@ from aiogram import types
 from aiogram.dispatcher.filters import BoundFilter
 from dispatcher import bot
 from config import botToken
-from database import pg
 
 class canBotChangeFilter(BoundFilter):
+	"""
+	Check if the bot can change info of the chat
+	return: Returns True if can change info
+	rtype: `bool`
+	"""
 	key = "bot_change"
 
 	def __init__(self, bot_change):
@@ -15,6 +19,11 @@ class canBotChangeFilter(BoundFilter):
 		return bot_member.can_change_info
 
 class canBotDeleteFilter(BoundFilter):
+	"""
+	Check if the bot can delete messages in the chat
+	return: Returns True if can delete messages
+	rtype: `bool`
+	"""
 	key = "bot_delete"
 
 	def __init__(self, bot_delete):
@@ -25,6 +34,11 @@ class canBotDeleteFilter(BoundFilter):
 		return bot_member.can_delete_message
 
 class canBotBanFilter(BoundFilter):
+	"""
+	Check if the bot can restrict users
+	return: Returns True if can restrict
+	rtype: `bool`
+	"""
 	key = "bot_ban"
 
 	def __init__(self, bot_ban):
@@ -35,6 +49,11 @@ class canBotBanFilter(BoundFilter):
 		return bot_member.can_restrict_members
 
 class canBotPromoteFilter(BoundFilter):
+	"""
+	Check if the bot can promote user to admin
+	return: Returns True if can promote
+	rtype: `bool`
+	"""
 	key = "bot_promote"
 
 	def __init__(self, bot_promote):
