@@ -16,7 +16,12 @@ class isAdminFilter(BoundFilter):
 		self.is_admin = is_admin
 
 	async def check(self, message: types.Message):
-		return message.from_user.id in pg.getChatAdmins(message.chat.id)
+		admins = await message.chat.get_administrators()
+		adminsList = set()
+		for i in admins:
+			adminsList.add(i.user.id)
+
+		return message.from_user.id in adminsList
 
 class isBotFilter(BoundFilter):
 	"""
@@ -46,3 +51,15 @@ class isBotAdminFilter(BoundFilter):
 	async def check(self, message: types.Message):
 		bot = await bot.get_chat_member(chat_id=message.chat.id, user_id=botToken.split(':')[0])
 		return await bot.is_chat_admin()
+
+class isChannelFilter(BoundFilter):
+	key = "is_channel"
+
+	def __init__(self, is_channel):
+		self.is_channel = is_channel
+
+	async def check(self, message: types.Message):
+		if message.from_user.id == 777000:
+			return message.sender_chat.type == "channel"
+		else:
+			return False
