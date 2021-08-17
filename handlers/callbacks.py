@@ -1,7 +1,8 @@
 from aiogram import types
 from dispatcher import dp
 from database import pg
-import config as cfg
+import functions.markup as markup
+import json
 
 import lang
 

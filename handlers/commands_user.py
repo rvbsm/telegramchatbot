@@ -1,7 +1,6 @@
 from aiogram import types
 from dispatcher import dp
 from database import pg
-import config as cfg
 import functions.command as cmd
 
 @dp.message_handler(lambda message: cmd.getCommand(message) in pg.getCommandsList(message.chat.id))
