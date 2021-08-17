@@ -50,11 +50,16 @@ async def userPromote(message: types.Message):
 		if pg.getUserStatus(message.reply_to_message.from_user.id, message.chat.id):
 			return
 
+		curAdminSettings = pg.getAdminSettings(message.chat.id)
 		await message.chat.promote(
-			user_id=message.reply_to.message.from_user.id,
-			can_change_info=True,
-			can_delete_messages=True,
-			can_pin_messages=True
+			user_id=message.reply_to_message.from_user.id,
+			is_anonymous=curAdminSettings["is_anonymous"],
+			can_change_info=curAdminSettings["can_change_info"],
+			can_delete_messages=curAdminSettings["can_delete_messages"],
+			can_invite_users=curAdminSettings["can_invite_users"],
+			can_restrict_members=curAdminSettings["can_restrict_members"],
+			can_pin_messages=curAdminSettings["can_pin_messages"],
+			can_promote_members=curAdminSettings["can_promote_members"]
 		)
 
 		pg.setUserStatus(message.reply_to_message.from_user.id, message.chat.id, True)
@@ -108,6 +113,24 @@ async def adminBan(message: types.Message):
 	await message.reply_to_message.reply(text=getattr(lang, chatLang).banText)
 	await message.chat.kick(user_id=message.reply_to_message.from_user.id)
 
+@dp.message_handler(commands=["mute"], is_admin=True, is_reply=True, bot_ban=True)
+async def adminMute(message: types.Message):
+	chatLang = pg.getChatLang(message.chat.id)
+	if cmd.getCommand(message) != "warn":
+		pg.updateUserCounter(message.from_user.id, message.chat.id)
+
+		if cmd.getCommandArgs(message)[0] and cmd.getCommandArgs(message)[0].isdigit:
+			muteSeconds = cmd.getCommandArgs(message)[0]
+		else:
+			muteSeconds = 60
+
+	await message.chat.restrict(
+		user_id=message.reply_to_message.from_user.id,
+		until_date=datetime.timedelta(seconds=muteSeconds),
+		can_send_messages=False
+	)
+	await message.reply_to_message.reply(text=getattr(lang, chatLang).muteText)
+
 @dp.message_handler(commands=["unban", "pardon"], is_admin=True, is_reply=True, bot_ban=True)
 async def adminPardon(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
@@ -122,11 +145,4 @@ async def adminPardon(message: types.Message):
 async def settingsMessage(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
 
-	settingsMarkup = types.InlineKeyboardMarkup(row_width=3)
-	settingsMarkup.add(
-		types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsLangText, callback_data="settings-language"),
-		types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsWarnText + pg.getChatMaxWarns(message.chat.id), callback_data="settings-max_warns")
-		#types.InlineKeyboardButton(text=getattr(lang, chatLang).settingsDefault Text, callback_data="settings-")
-	)
-
-	await message.reply(text=getattr(lang, chatLang).settingsTitle, reply_markup=settingsMarkup)
+	await message.reply(text=getattr(lang, chatLang).settingsTitle, reply_markup=markup.settingsMarkup(chatLang, message))

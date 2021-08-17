@@ -7,18 +7,37 @@ class ru_RU:
 	promoteToAdminText = "Повышен до Админа"
 	promoteToUserText = "Понижен до Пользователя"
 
-	aboutUserText = """Информация об участнике {0}\nID: {1}\nВсего сообщений: {2}\nПредупреждения: {3}/{4}"""
+	aboutUserText = """<b>Информация об участнике</b> {0}\n<b>ID:</b> <code>{1}</code>\n<b>Всего сообщений:</b> {2}\n<b>Предупреждения:</b> {3}/{4}"""
 	langChange = "Язык успешно изменён на Русский"
 
 	warnAddText = "Тшш, поаккуратней с сообщениями\nУчастник имеет {0}/{1} предупреждений"
 	warnRemText = "Сняты все предупреждения"
 	banText = "Ой, отлетел челик"
+	muteText = "Тшш, помолчи"
 	
 	settingsTitle = "Настройки"
 	settingsWarnText = "Количество предупреждений: "
 	settingsLangText = "Язык"
 	backButtonText = "Назад"
+	settingsChatDefaultsText = "Дефолтные настройки чата"
+	settingsAdminDefaultsText = "Дефолт права админа"
 
+	defaultchatSendMessage = "Отправка сообщений"
+	defaultchatSendMedia = "Медиа"
+	defaultchatSendPolls = "Голосование"
+	defaultchatSendOther = "Стикеры/GIF"
+	defaultchatAddPreview = "Превью"
+	defaultchatChangeInfo = "Инфа чата"
+	defaultchatCanInvite = "Приглашение"
+	defaultchatPinMessages = "Закреп"
+
+	defaultadminIsAnonymous = "Аноним"
+	defaultadminCanChange = "Инфа чата"
+	defaultadminCanDelete = "Удаление"
+	defaultadminCanInvite = "Приглашение"
+	defaultadminCanRestrict = "Бан"
+	defaultadminCanPin = "Закреп"
+	defaultadminCanPromote = "Новые админы"
 
 class en_US:
 	firstMessageText = "Hi chat!"
@@ -29,17 +48,39 @@ class en_US:
 	promoteToAdminText = "Upped to Admin"
 	promoteToUserText = "Demoted to User"
 
-	aboutUserText = """Info about {0}\nID: {1}\nMessages: {2}\nWarns: {3}/{4}"""
+	aboutUserText = """<b>Info about</b> {0}\n<b>ID:</b> <code>{1}</code>\n<b>Messages:</b> {2}\n<b>Warns:</b> {3}/{4}"""
 	langChange = "Language successfully changed to English"
 
 	warnAddText = "You get a warning\nMember have {0}/{1} warnings"
 	warnRemText = "Cleared all warnings"
 	banText = "You have been banned from this chat"
+	muteText = "Shut up"
 	
 	settingsTitle = "Settings"
 	settingsWarnText = "Number of warns: "
 	settingsLangText = "Language"
 	backButtonText = "Back"
+	
+
+	settingsChatDefaultsText = "Дефолтные настройки чата"
+	settingsAdminDefaultsText = "Дефолт права админа"
+
+	defaultchatSendMessage = "Отправка сообщений"
+	defaultchatSendMedia = "Медиа"
+	defaultchatSendPolls = "Голосование"
+	defaultchatSendOther = "Стикеры/GIF"
+	defaultchatAddPreview = "Превью"
+	defaultchatChangeInfo = "Инфа чата"
+	defaultchatCanInvite = "Приглашение"
+	defaultchatPinMessages = "Закреп"
+
+	defaultadminIsAnonymous = "Аноним"
+	defaultadminCanChange = "Инфа чата"
+	defaultadminCanDelete = "Удаление"
+	defaultadminCanInvite = "Приглашение"
+	defaultadminCanRestrict = "Бан"
+	defaultadminCanPin = "Закреп"
+	defaultadminCanPromote = "Новые админы"
 
 class uk_UA:	
 	firstMessageText = "Привіт, чатику!"
@@ -50,14 +91,31 @@ class uk_UA:
 	promoteToAdminText = "Підвищено до Адміністратора"
 	promoteToUserText = "Знижений до Користувача"
 
-	aboutUserText = """Информація про учасника {0}\nID: {1}\nВсього повідомлень: {2}\nПопередження: {3}/{4}"""
+	aboutUserText = """<b>Информація про учасника</b> {0}\n<b>ID:<b> <code>{1}</code>\n<b>Всього повідомлень:</b> {2}\n<b>Попередження:</b> {3}/{4}"""
 	langChange = "Мова успішно змінено на Українську"
 
 	warnAddText = "Слідкуй за словами!\nВчасник має {0}/{1} попереджень"
 	warnRemText = "Знято усі попередження"
 	banText = "Бувай, козаче"
+	muteText = "Помовчи"
 	
 	settingsTitle = "Налаштування"
 	settingsWarnText = "кількість попереджень: "
 	settingsLangText = "Мова"
 	backButtonText = "Повернутися"
+
+
+	settingsChatDefaultsText = "Дефолтные настройки чата"
+	settingsAdminDefaultsText = "Дефолт права админа"
+
+	defaultchatSendMessage = "Отправка сообщений"
+	defaultchatSendMedia = ""
+	defaultchatSendOther = ""
+	defaultchatAddPreview = ""
+	defaultadminIsAnonymous = ""
+	defaultadminCanChange = ""
+	defaultadminCanDelete = ""
+	defaultadminCanInvite = ""
+	defaultadminCanRestrict = ""
+	defaultadminCanPin = ""
+	defaultadminCanPromote = ""
