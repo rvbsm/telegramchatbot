@@ -64,7 +64,7 @@ async def userPromote(message: types.Message):
 			return
 
 		await message.chat.restrict(
-			user_id=message.reply_to.message.from_user.id,
+			user_id=message.reply_to_message.from_user.id,
 			can_send_messages=True
 		)
 		pg.setUserStatus(message.reply_to_message.from_user.id, message.chat.id, False)
@@ -91,31 +91,33 @@ async def adminWarn(message: types.Message):
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 
 	pg.addUserWarn(message.reply_to_message.from_user.id, message.chat.id)
-	await message.reply_to_message.reply(getattr(lang, chatLang).warnAddText.format(pg.getUserWarn(message.from_user.id, message.chat.id), pg.getChatMaxWarns(message.chat.id)))
+	warnUser = pg.getUserWarn(message.reply_to_message.from_user.id, message.chat.id)
+	warnChat = pg.getChatMaxWarns(message.chat.id)
+	
+	if warnUser == warnChat:
+		pg.removeUserWarn(message.reply_to_message.from_user.id, message.chat.id)
+		await adminMute(message)
+	else:
+		await message.reply_to_message.reply(getattr(lang, chatLang).warnAddText.format(warnUser, warnChat))
 
-	if pg.getUserWarn(message.from_user.id, message.chat.id) == pg.getChatMaxWarns(message.chat.id):
-		await adminBan(message)
-
-# ~
 @dp.message_handler(commands=["ban"], is_admin=True, is_reply=True, bot_ban=True)
 async def adminBan(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 
-	await message.reply(text=getattr(lang, chatLang).banText)
-	message.chat.kick(user_id=message.reply_to.message.from_user.id)
+	await message.reply_to_message.reply(text=getattr(lang, chatLang).banText)
+	await message.chat.kick(user_id=message.reply_to_message.from_user.id)
 
 @dp.message_handler(commands=["unban", "pardon"], is_admin=True, is_reply=True, bot_ban=True)
 async def adminPardon(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)
 	pg.updateUserCounter(message.from_user.id, message.chat.id)
 
-	pg.removeUserWarn(message.reply_to.message.from_user.id, message.chat.id)
-	await message.chat.unban(message.reply_to.message.from_user.id, True)
+	pg.removeUserWarn(message.reply_to_message.from_user.id, message.chat.id)
+	await message.chat.unban(message.reply_to_message.from_user.id, True)
 	
 	await message.reply_to_message.reply(text=getattr(lang, chatLang).warnRemText)
 
-# ~
 @dp.message_handler(commands=["settings"], is_admin=True)
 async def settingsMessage(message: types.Message):
 	chatLang = pg.getChatLang(message.chat.id)

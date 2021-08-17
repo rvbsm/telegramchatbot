@@ -17,31 +17,26 @@ async def langCallbacks(call: types.callback_query):
 async def settingsCallbacks(call: types.callback_query):
 	chatLang = pg.getChatLang(call.message.chat.id)
 	call_data = call.data.split('-')[1]
-	
+	settingsMarkup = types.InlineKeyboardMarkup()
+
 	if call_data == "language":
-		languageMarkup = types.InlineKeyboardMarkup(row_width=3)
-		languageMarkup.add(
-			types.InlineKeyboardButton(text="Русский", callback_data="language-ru_RU"),
-			types.InlineKeyboardButton(text="English", callback_data="language-en_US"),
-			types.InlineKeyboardButton(text="Укранська", callback_data="language-uk_UA")
+		settingsMarkup.add(
+			types.InlineKeyboardButton(callback_data="language-ru_RU", text="Русский"),
+			types.InlineKeyboardButton(callback_data="language-en_US", text="English"),
+			types.InlineKeyboardButton(callback_data="language-uk_UA", text="Укранська")
 		)
-		
-		await call.message.edit_reply_markup(reply_markup=languageMarkup)
-	elif call_data == "max_warns":
-		maxwarnsMarkup = types.InlineKeyboardMarkup(row_width=4)
-		maxwarnsMarkup.add(
-			types.InlineKeyboardButton(text="3", callback_data="max_warn-3"),
-			types.InlineKeyboardButton(text="5", callback_data="max_warn-5"),
-			types.InlineKeyboardButton(text="7", callback_data="max_warn-7"),
-			types.InlineKeyboardButton(text="10", callback_data="max_warn-10")
+	elif call_data == "maxwarns":
+		settingsMarkup.add(
+			types.InlineKeyboardButton(callback_data="maxwarn-3", text="3"),
+			types.InlineKeyboardButton(callback_data="maxwarn-5", text="5"),
+			types.InlineKeyboardButton(callback_data="maxwarn-7", text="7"),
+			types.InlineKeyboardButton(callback_data="maxwarn-10", text="10")
 		)
-		maxwarnsMarkup.add(
-			types.InlineKeyboardButton(text=getattr(lang, chatLang).backButtonText, callback_data="back-settings")
+		)
 		)
 
-		await call.message.edit_reply_markup(reply_markup=maxwarnsMarkup)
 
-@dp.callback_query_handler(lambda call: "max_warn" == call.data.split('-')[0])
+@dp.callback_query_handler(lambda call: "maxwarn" == call.data.split('-')[0])
 async def maxwarnsCallbacks(call: types.callback_query):
 	chatLang = pg.getChatLang(call.message.chat.id)
 	call_data = call.data.split('-')[1]

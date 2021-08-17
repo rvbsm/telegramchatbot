@@ -1,6 +1,6 @@
 from aiogram import types
 
-def getCommandAll(message: types.Message):
+def getCommandAll(message: types.Message) -> list[str]:
 	"""
 	return: Returns List if command
 	rtype: `list`
@@ -10,14 +10,14 @@ def getCommandAll(message: types.Message):
 	else:
 		return message.text
 
-def getCommand(message: types.Message):
+def getCommand(message: types.Message) -> str:
 	"""
 	return: Returns command without command-prefix
 	rtype: `str`
 	"""
 	return getCommandAll(message)[0][1:]
 
-def getCommandArgs(message: types.Message):
+def getCommandArgs(message: types.Message) -> list[str]:
 	"""
 	return: Returns List with arguments of command
 	rtype: `list`
